@@ -1,3 +1,0 @@
-C:/Users/LENOVO/Desktop/工作空间/PiCalculator/build/CMakeFiles/main.dir
-C:/Users/LENOVO/Desktop/工作空间/PiCalculator/build/CMakeFiles/edit_cache.dir
-C:/Users/LENOVO/Desktop/工作空间/PiCalculator/build/CMakeFiles/rebuild_cache.dir
