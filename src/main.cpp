@@ -1,5 +1,18 @@
 #include <myheader.h>
 
+/*
+CHUDNVSKY(iterNum):
+    s = 13591409
+    a = 0
+    f = 1
+    for i = 1 iterNum
+        f = f * i
+        a = a * (12i - 2)(12i - 6)(12i - 10)
+        b = b * -262537412640768000
+        s += (13591409 + 545140134i) * a / (b * f);
+    return 426880 * sqrt(10005) / s
+*/
+
 void CalculatePi() {
 
 }
