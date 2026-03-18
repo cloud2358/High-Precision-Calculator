@@ -1,10 +1,12 @@
-# PiCalculator
-我的第一个项目 / My first project
+# High-Precision Calculator 高精度计算器
+这是一个用 c++语言 实现的高精度计算器。
+项目使用 C++17 编写，并利用 GMP 处理超大数字运算。
+目前只实现了 Pi 的高精度计算。
+备注：个人学习项目
 
-3/10：创建了项目，使用 Leibniz theorem 计算，如预料之中，结果偏差巨大
-下一步尝试优化过的 Chudnovsky 算法
-3/11：第一次用CMake构建项目
-3/13：完善了整个项目并补充了README
-3/14：确定了基本框架
-3/16：直接用Boost自带函数计算
-3/18：破防了，研究了半天不如vibe coding
+目录结构：
+.
+├── include/
+├── src/
+├── CMakeLists.txt
+└── README.md
