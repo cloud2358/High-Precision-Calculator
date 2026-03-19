@@ -1,9 +1,6 @@
 #ifndef MATH_CONSTANTS_H
 #define MATH_CONSTANTS_H
 
-#include <iostream>
-#include <cmath>
-#include <vector>
 #include <gmpxx.h>
 
 // Provide high precision math constants.
