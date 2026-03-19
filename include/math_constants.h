@@ -3,8 +3,6 @@
 
 #pragma once
 #include <gmpxx.h>
-#include <functional>
-#include <map>
 
 // Provide high precision math constants.
 class MathConstants {

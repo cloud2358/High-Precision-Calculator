@@ -1,27 +1,34 @@
 #include <math_constants.h>
 #include <iostream>
-using std::cin, std::cout, std::endl;
+#include <functional>
+#include <map>
+#include <string>
+
+using ComputeFunc = std::function<mpf_class(long long)>;
+struct ConstantInfo {
+    std::string name;
+    ComputeFunc func;
+};
+std::map<int, ConstantInfo> menu {
+    {1, {"pi", MathConstants::ComputePi}}, 
+    {2, {"e", MathConstants::ComputeE}}
+};
 
 int main() {
     long long digits;
-    cout << "Enter constant to calculate:\n1) pi\n2) e" << endl;
-    int x;
-    cin >> x;
-    if (x == 1) {
-        cout << "Enter calculate digits: ";
-        cin >> digits;
-        cout << "Calculating " << digits << " digits of pi..." << endl;
-        mpf_class pi = MathConstants::ComputePi(digits);
-        cout.precision(digits);
-        cout << pi << endl;
+    std::cout << "Enter constant to calculate:" << std::endl;
+    for (auto e : menu) {
+        std::cout << e.first << ": " << e.second.name << std::endl;
     }
-    else if (x == 2) {
-        cout << "Enter calculate digits: ";
-        cin >> digits;
-        cout << "Calculating " << digits << " digits of e..." << endl;
-        mpf_class e = MathConstants::ComputeE(digits);
-        cout.precision(digits);
-        cout << e << endl;
+    int x;
+    std::cin >> x;
+    if (menu.find(x) != menu.end()) {
+        std::cout << "Enter calculate digits: ";
+        std::cin >> digits;
+        std::cout << "Calculating " << digits << " digits of " << menu[x].name << " ..." << std::endl;
+        mpf_class result = menu[x].func(digits);
+        std::cout.precision(digits);
+        std::cout << result << std::endl;
     }
     return 0;
 }
