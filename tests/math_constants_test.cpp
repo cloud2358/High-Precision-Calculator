@@ -1,4 +1,4 @@
-#include <MathConstants.h>
+#include <math_constants.h>
 #include <iostream>
 
 using std::cin, std::cout, std::endl;

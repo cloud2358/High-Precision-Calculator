@@ -1,14 +1,16 @@
 #ifndef MATH_CONSTANTS_H
 #define MATH_CONSTANTS_H
 
+#pragma once
 #include <gmpxx.h>
+#include <functional>
+#include <map>
 
 // Provide high precision math constants.
 class MathConstants {
 public:
-    // Compute Pi to a specific number of decimal digits.
-    static mpf_class compute_pi(int digits);
-    static mpf_class compute_e(int digits);
+    static mpf_class ComputePi(long long digits);
+    static mpf_class ComputeE(long long digits);
 private:
     // Hold partial results for recursive calculation.
     struct PQT { mpz_class P, Q, T; };
@@ -22,7 +24,7 @@ private:
     static inline const mpz_class C3_div_24 = C * C * C / 24;
 
     // Compute outcome recursively
-    static PQT chudnovsky(mpz_class n1, mpz_class n2);
-    static PQT taylor(mpz_class n1, mpz_class n2);
+    static PQT Chudnovsky(mpz_class n1, mpz_class n2);
+    static PQT Taylor(mpz_class n1, mpz_class n2);
 };
 #endif

@@ -1,11 +1,11 @@
-#include <MathConstants.h>
+#include <math_constants.h>
 
-mpf_class MathConstants::compute_pi(int digits) {
+mpf_class MathConstants::ComputePi(long long digits) {
     // 1 iteration gives ~14.18 digits
     long N = digits / 14 + 1;
     unsigned long prec_bits = digits * 3.321928 + 64;
     mpf_set_default_prec(prec_bits);
-    PQT res = chudnovsky(0, N);
+    PQT res = Chudnovsky(0, N);
     mpf_class pi;
     mpf_class q_f(res.Q);
     mpf_class t_f(res.T);
@@ -14,11 +14,11 @@ mpf_class MathConstants::compute_pi(int digits) {
     return pi;
 }
 
-mpf_class MathConstants::compute_e(int digits) {
+mpf_class MathConstants::ComputeE(long long digits) {
     long N = digits;
     unsigned long prec_bits = digits * 3.321928 + 64;
     mpf_set_default_prec(prec_bits);
-    PQT res = taylor(0, N);
+    PQT res = Taylor(0, N);
     mpf_class e;
     mpf_class q_f(res.Q);
     mpf_class t_f(res.T);
@@ -27,7 +27,7 @@ mpf_class MathConstants::compute_e(int digits) {
     return e;
 }
 
-MathConstants::PQT MathConstants::chudnovsky(mpz_class n1, mpz_class n2) {
+MathConstants::PQT MathConstants::Chudnovsky(mpz_class n1, mpz_class n2) {
     PQT res;
     if (n1 >= n2) throw std::runtime_error("Error: invalid range in chudnovsky");
     else if (n1 + 1 == n2) {
@@ -42,8 +42,8 @@ MathConstants::PQT MathConstants::chudnovsky(mpz_class n1, mpz_class n2) {
     }
     else {
         mpz_class mid = (n1 + n2) / 2;
-        PQT left = chudnovsky(n1, mid);
-        PQT right = chudnovsky(mid, n2);
+        PQT left = Chudnovsky(n1, mid);
+        PQT right = Chudnovsky(mid, n2);
         res.P = left.P * right.P;
         res.Q = left.Q * right.Q;
         res.T = left.T * right.Q + left.P * right.T;
@@ -51,7 +51,7 @@ MathConstants::PQT MathConstants::chudnovsky(mpz_class n1, mpz_class n2) {
     return res;
 }
 
-MathConstants::PQT MathConstants::taylor(mpz_class n1, mpz_class n2) {
+MathConstants::PQT MathConstants::Taylor(mpz_class n1, mpz_class n2) {
     PQT res;
     if (n1 >= n2) throw std::runtime_error("Error: invalid range in compute_PQT");
     else if (n1 + 1 == n2) {
@@ -61,8 +61,8 @@ MathConstants::PQT MathConstants::taylor(mpz_class n1, mpz_class n2) {
     }
     else {
         mpz_class mid = (n1 + n2) / 2;
-        PQT left = taylor(n1, mid);
-        PQT right = taylor(mid, n2);
+        PQT left = Taylor(n1, mid);
+        PQT right = Taylor(mid, n2);
         res.P = 1;
         res.Q = left.Q * right.Q;
         res.T = left.T * right.Q + right.T;

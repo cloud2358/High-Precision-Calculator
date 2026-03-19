@@ -1,4 +1,4 @@
-#include <MathConstants.h>
+#include <math_constants.h>
 #include <iostream>
 using std::cin, std::cout, std::endl;
 
@@ -11,7 +11,7 @@ int main() {
         cout << "Enter calculate digits: ";
         cin >> digits;
         cout << "Calculating " << digits << " digits of pi..." << endl;
-        mpf_class pi = MathConstants::compute_pi(digits);
+        mpf_class pi = MathConstants::ComputePi(digits);
         cout.precision(digits);
         cout << pi << endl;
     }
@@ -19,7 +19,7 @@ int main() {
         cout << "Enter calculate digits: ";
         cin >> digits;
         cout << "Calculating " << digits << " digits of e..." << endl;
-        mpf_class e = MathConstants::compute_e(digits);
+        mpf_class e = MathConstants::ComputeE(digits);
         cout.precision(digits);
         cout << e << endl;
     }
