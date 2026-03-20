@@ -26,8 +26,8 @@ int main() {
         std::cout << "Enter calculate digits: ";
         std::cin >> digits;
         std::cout << "Calculating " << digits << " digits of " << menu[x].name << " ..." << std::endl;
-        mpf_class result = menu[x].func(digits);
-        std::cout.precision(digits);
+        mpf_class result = menu[x].func(digits >= 100 ? digits : 100);
+        std::cout.precision(digits + 1);
         std::cout << result << std::endl;
     }
     return 0;
