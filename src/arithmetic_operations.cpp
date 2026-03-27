@@ -1,21 +1,25 @@
 #include <arithmetic_operations.h>
 
-static const mpf_class add(const mpf_class &x, const mpf_class &y) {
+const mpf_class ArithmeticOperations::add(const mpf_class &x, const mpf_class &y) {
     return x + y;
 }
 
-static const mpf_class subtract(const mpf_class &x, const mpf_class &y) {
+const mpf_class ArithmeticOperations::subtract(const mpf_class &x, const mpf_class &y) {
     return x - y;
 }
 
-static const mpf_class multiply(const mpf_class &x, const mpf_class &y) {
+const mpf_class ArithmeticOperations::multiply(const mpf_class &x, const mpf_class &y) {
     return x * y;
 }
 
-static const mpf_class divide(const mpf_class &x, const mpf_class &y) {
+const mpf_class ArithmeticOperations::divide(const mpf_class &x, const mpf_class &y) {
     return x / y;
 }
 
-static const mpf_class power(const mpf_class &x, const mpf_class &y) {
-    
+const mpf_class ArithmeticOperations::power(const mpf_class &x, const mpf_class &y) {
+    return 0;
+}
+
+void ArithmeticOperations::setDefaultPrecision() {
+    mpf_set_default_prec(256);
 }

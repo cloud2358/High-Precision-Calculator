@@ -1,6 +1,6 @@
 #include <math_constants.h>
 
-mpf_class MathConstants::ComputePi(long long digits) {
+mpf_class MathConstants::computePi(long long digits) {
     // 1 iteration gives ~14.18 digits
     long N = digits / 14 + 1;
     unsigned long prec_bits = digits * 3.321928 + 64;
@@ -14,7 +14,7 @@ mpf_class MathConstants::ComputePi(long long digits) {
     return pi;
 }
 
-mpf_class MathConstants::ComputeE(long long digits) {
+mpf_class MathConstants::computeE(long long digits) {
     long N = digits;
     unsigned long prec_bits = digits * 3.321928 + 64;
     mpf_set_default_prec(prec_bits);

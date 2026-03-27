@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(MathLib 
     src/math_constants.cpp
     src/arithmetic_operations.cpp
+    src/high_precision_calculator.cpp
 )
 
 target_include_directories(MathLib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

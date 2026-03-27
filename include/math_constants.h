@@ -7,8 +7,8 @@
 // Provide high precision math constants.
 class MathConstants {
 public:
-    static mpf_class ComputePi(long long digits);
-    static mpf_class ComputeE(long long digits);
+    static mpf_class computePi(long long digits);
+    static mpf_class computeE(long long digits);
 private:
     // Hold partial results for recursive calculation.
     struct PQT { mpz_class P, Q, T; };
