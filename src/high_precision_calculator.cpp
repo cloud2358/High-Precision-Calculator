@@ -9,26 +9,35 @@ const mpf_class HighPrecisionCalculator::calculate(const std::string& input) {
     for (Token token : tokens) {
         if (token.type == TokenType::Number) {
             numbers.push_back((mpf_class)token.value);
-            continue;
         }
-        if (token.type == TokenType::Constant) {
+        else if (token.type == TokenType::Constant) {
             numbers.push_back(MathConstants::getConstant(token.value));
-            continue;
         }
-        if (token.type == TokenType::Operator) {\
+        else if (token.type == TokenType::Operator) {
             assert(token.value.size() == 1);
-            char op = token.value[0];
-            while (ops.size() && getPrecedence(ops.back()) > getPrecedence(op)) {
-                mpf_class y = numbers.back();
-                numbers.pop_back();
-                mpf_class x = numbers.back();
-                numbers.pop_back();
-                numbers.push_back(getCalculationResult(x, y, ops.back()));
-                ops.pop_back();
+            if (token.value == "(") {
+                ops.push_back('(');
             }
-            ops.push_back(op);
+            else if (token.value == ")") {
+                while (!ops.empty() && ops.back() != '(') {
+                    mpf_class y = numbers.back(); numbers.pop_back();
+                    mpf_class x = numbers.back(); numbers.pop_back();
+                    char op = ops.back(); ops.pop_back();
+                    numbers.push_back(getCalculationResult(x, y, op));
+                }
+                if (!ops.empty()) ops.pop_back();
+            }
+            else {
+                char op = token.value[0];
+                while (!ops.empty() && getPrecedence(ops.back()) >= getPrecedence(op))  {
+                    mpf_class y = numbers.back(); numbers.pop_back();
+                    mpf_class x = numbers.back(); numbers.pop_back();
+                    numbers.push_back(getCalculationResult(x, y, ops.back()));
+                    ops.pop_back();
+                }
+                ops.push_back(op);
+            }
         }
-
     }
     while (ops.size()) {
         mpf_class y = numbers.back();
@@ -57,26 +66,27 @@ const bool HighPrecisionCalculator::getNextToken(const std::string& input, size_
 
     size_t inputSize = input.size();
     while (position < inputSize && !isValid(input[position])) position++;
-    while (position < inputSize && isValid(input[position])) {
-        token.value += input[position++];
-    }  
-    
-    if (token.value.empty()) return false;
-    token.type = getTokenType(token.value);
-    return true;
-}
-
-const HighPrecisionCalculator::TokenType HighPrecisionCalculator::getTokenType(const std::string& name) {
-    bool isConst = MathConstants::isConstant(name);
-    if (isConst) return TokenType::Constant;
-    bool isOp = isOperator(name[0]);
-    if (isOp) return TokenType::Operator;
-    bool isNum = true;
-    for (auto ch : name) {
-        if (!(isdigit(ch) || ch == '.')) isNum = false;
+    if (position >= inputSize) return false;
+    if (isDigit(input[position])) {
+        token.type = TokenType::Number;
+        while (position < inputSize) {
+            if (!isDigit(input[position]) && input[position] != '.') break;
+            token.value += input[position]; position++;
+        }
     }
-    if (isNum) return TokenType::Number;
-    return TokenType::Variant;
+    else if (isOperator(input[position])) {
+        token.type = TokenType::Operator;
+        token.value += input[position]; position++;
+    }
+    else if (isLetter(input[position])) {
+        while (position < inputSize) {
+            if (!isLetter(input[position]) && !isDigit(input[position])) break;
+            token.value += input[position]; position++;
+        }
+        if (MathConstants::isConstant(token.value)) token.type = TokenType::Constant;
+        else throw std::runtime_error("Variant function working on progress");
+    }
+    return true;
 }
 
 const mpf_class HighPrecisionCalculator::getCalculationResult(const mpf_class& x, const mpf_class& y, char op) {

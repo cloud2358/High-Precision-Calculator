@@ -25,7 +25,6 @@ private:
     };
     static const std::vector<Token> tokenize(const std::string& input);
     static const bool getNextToken(const std::string& input, size_t& position, Token& token);
-    static const TokenType getTokenType(const std::string& name);
     static const mpf_class getCalculationResult(const mpf_class& x, const mpf_class& y, char op);
     static const int getPrecedence(char op);
     static const bool isValid(char op);
