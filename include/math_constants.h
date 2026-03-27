@@ -3,26 +3,27 @@
 
 #pragma once
 #include <gmpxx.h>
+#include <functional>
+#include <string>
+#include <unordered_map>
 
 // Provide high precision math constants.
 class MathConstants {
 public:
-    static mpf_class computePi(long long digits);
-    static mpf_class computeE(long long digits);
+    
+
+    static const bool isConstant(const std::string& name);
+    static const mpf_class getConstant(const std::string& name);
+
 private:
-    // Hold partial results for recursive calculation.
+    
+    using ConstantFunc = std::function<mpf_class(long long)>;
+    static const std::unordered_map<std::string, ConstantFunc> registry;
+    static const mpf_class computePi(long long digits);
+    static const mpf_class computeE(long long digits);
     struct PQT { mpz_class P, Q, T; };
-
-    // Chudnovsky Constants
-    static inline const mpz_class A = 13591409;
-    static inline const mpz_class B = 545140134;
-    static inline const mpz_class C = 640320;
-    static inline const mpz_class D = 426880;
-    static inline const mpz_class E = 10005;
-    static inline const mpz_class C3_div_24 = C * C * C / 24;
-
-    // Compute outcome recursively
     static PQT Chudnovsky(mpz_class n1, mpz_class n2);
     static PQT Taylor(mpz_class n1, mpz_class n2);
+    
 };
 #endif

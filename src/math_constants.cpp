@@ -1,7 +1,27 @@
 #include <math_constants.h>
 
-mpf_class MathConstants::computePi(long long digits) {
-    // 1 iteration gives ~14.18 digits
+const std::unordered_map<std::string, MathConstants::ConstantFunc> MathConstants::registry = {
+    {"pi", MathConstants::computePi},
+    {"e", MathConstants::computeE}
+};
+
+const bool MathConstants::isConstant(const std::string& name) {
+    return registry.find(name) != registry.end();
+}
+
+const mpf_class MathConstants::getConstant(const std::string& name) {
+    auto it = registry.find(name);
+    if (it != registry.end()) {
+        return it->second(256);
+    }
+    return 0;
+}
+
+const mpf_class MathConstants::computePi(long long digits) {
+    const mpz_class A = 13591409;
+    const mpz_class D = 426880;
+    const mpz_class E = 10005;
+
     long N = digits / 14 + 1;
     unsigned long prec_bits = digits * 3.321928 + 64;
     mpf_set_default_prec(prec_bits);
@@ -14,7 +34,7 @@ mpf_class MathConstants::computePi(long long digits) {
     return pi;
 }
 
-mpf_class MathConstants::computeE(long long digits) {
+const mpf_class MathConstants::computeE(long long digits) {
     long N = digits;
     unsigned long prec_bits = digits * 3.321928 + 64;
     mpf_set_default_prec(prec_bits);
@@ -28,7 +48,12 @@ mpf_class MathConstants::computeE(long long digits) {
 }
 
 MathConstants::PQT MathConstants::Chudnovsky(mpz_class n1, mpz_class n2) {
-    PQT res;
+    const mpz_class A = 13591409;
+    const mpz_class B = 545140134;
+    const mpz_class C = 640320;
+    const mpz_class C3_div_24 = C * C * C / 24;
+
+    PQT res; 
     if (n1 >= n2) throw std::runtime_error("Error: invalid range in chudnovsky");
     else if (n1 + 1 == n2) {
         res.P = (2 * n2 - 1);

@@ -5,7 +5,7 @@ using namespace std;
 int main() {
     cout << "Enter input expression: " << endl;
     string s;
-    cin >> s;
+    std::getline(cin, s);
     cout << HighPrecisionCalculator::calculate(s);
     return 0;
 }
