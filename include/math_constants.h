@@ -10,8 +10,6 @@
 // Provide high precision math constants.
 class MathConstants {
 public:
-    
-
     static const bool isConstant(const std::string& name);
     static const mpf_class getConstant(const std::string& name);
 
