@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(MathLib 
-    src/arithmetic_operations.cpp
-    src/high_precision_calculator.cpp
-    src/input_tokenizer.cpp
-    src/math_constants.cpp
+    src/ArithmeticOperations.cpp
+    src/HighPrecisionCalculator.cpp
+    src/InputTokenizer.cpp
+    src/MathConstants.cpp
 )
 
 target_include_directories(MathLib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

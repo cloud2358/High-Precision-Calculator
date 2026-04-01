@@ -7,9 +7,9 @@
 #include <string>
 #include <stack>
 #include <token.h>
-#include <arithmetic_operations.h>
-#include <math_constants.h>
-#include <input_tokenizer.h>
+#include <ArithmeticOperations.h>
+#include <MathConstants.h>
+#include <InputTokenizer.h>
 
 
 class HighPrecisionCalculator {

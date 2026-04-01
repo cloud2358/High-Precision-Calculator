@@ -1,4 +1,4 @@
-#include <high_precision_calculator.h>
+#include <HighPrecisionCalculator.h>
 #include <iostream>
 using namespace std;
 #define DIVLINE "===================="

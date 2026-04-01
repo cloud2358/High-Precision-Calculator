@@ -1,4 +1,4 @@
-#include <arithmetic_operations.h>
+#include <ArithmeticOperations.h>
 
 const std::unordered_map<std::string, size_t> ArithmeticOperations::registry = {
     {"+", 1},

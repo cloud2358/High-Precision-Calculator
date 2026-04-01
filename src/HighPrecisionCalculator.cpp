@@ -1,4 +1,4 @@
-#include <high_precision_calculator.h>
+#include <HighPrecisionCalculator.h>
 #include <assert.h>
 
 const mpf_class HighPrecisionCalculator::calculate(const std::string& input) {
