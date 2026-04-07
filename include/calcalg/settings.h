@@ -1,7 +1,6 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#define PRINT_DEBUG_INFORMATION
 
-#define DEFAULT_PRECISION 128
+#define DEFAULT_PRECISION 256
 #define DEFAULT_ANGLE_MODE RAD
 #define MAX_INPUT_LENGTH 1024
 
@@ -10,4 +9,6 @@
 #define COLOR_ACCENT 0xFF0000     // Red
 #define SCREEN_BRIGHTNESS 128     // 0-255 range
 
+#ifdef PRINT_DEBUG_INFORMATION
+#include <iostream>
 #endif

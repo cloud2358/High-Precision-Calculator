@@ -17,10 +17,10 @@ int main() {
             break;
         }
         else if (s == "help") {
-            cout << "help           get command illustration" << endl;
-            cout << "history        check history formulas" << endl;
-            cout << "clear          clean screen" << endl;
-            cout << "quit           end process" << endl;
+            cout << "help               get command illustration" << endl;
+            cout << "history            check history formulas" << endl;
+            cout << "clear              clean screen" << endl;
+            cout << "quit               end process" << endl;
         }
         else if (s == "history") {
             if (hist.empty()) {

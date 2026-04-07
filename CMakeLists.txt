@@ -6,10 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(MathLib 
     src/calcalg/ArithmeticOperations.cpp
-    src/calcalg/ExtendedOperations.cpp
     src/calcalg/HighPrecisionCalculator.cpp
     src/calcalg/InputTokenizer.cpp
-    src/calcalg/MathConstants.cpp
+    src/calcalg/MathUtils.cpp
 )
 
 target_include_directories(MathLib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/calcalg")

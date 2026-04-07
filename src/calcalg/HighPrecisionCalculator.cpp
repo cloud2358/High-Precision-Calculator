@@ -10,13 +10,11 @@ const mpf_class HighPrecisionCalculator::calculate(const std::string& input) {
         if (token.type == TokenType::Number) {
             numbers.push_back((mpf_class)token.name);
         }
-        else if (token.type == TokenType::Identifier) {
-            if (MathConstants::isConstant(token.name)) {
-                numbers.push_back(MathConstants::getConstant(token.name));
-            }
-            else {
-                throw std::runtime_error("Error: undefined identifier!");
-            }
+        else if (token.type == TokenType::Function) {
+            numbers.push_back(MathUtils::getMathFunc(token.name, {1}));
+        }
+        else if (token.type == TokenType::Variant) {
+            throw std::runtime_error("Function not finished yet!");
         }
         else if (token.type == TokenType::Operator) {
             assert(token.name.size() == 1);

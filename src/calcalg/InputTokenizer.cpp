@@ -17,7 +17,7 @@ const Token InputTokenizer::getNextToken(const std::string& input, size_t& posit
     }
 
     Token token;
-    while (position < inputSize && !isValid(input[position])) position++;
+    while (position < inputSize && !isNotBlank(input[position])) position++;
 
     if (position >= inputSize) {
         token.type = TokenType::Fullstop;
@@ -40,17 +40,20 @@ const Token InputTokenizer::getNextToken(const std::string& input, size_t& posit
         token.type = TokenType::Operator;
         token.name += input[position]; position++;
     }
-    else if (isLetter(input[position])) {
-        token.type = TokenType::Identifier;
+    else if (isInitial(input[position])) {
         while (position < inputSize) {
-            if (!isLetter(input[position]) && !isDigit(input[position])) break;
+            if (!isInitial(input[position]) && !isDigit(input[position])) break;
             token.name += input[position]; position++;
         }
+        if (MathUtils::isMathFunc(token.name)) {
+            token.type = TokenType::Function;
+        }
+        else token.type = TokenType::Variant;
     }
     return token;
 }
 
-const bool InputTokenizer::isValid(char op) {
+const bool InputTokenizer::isNotBlank(char op) {
     if (op == ' ') return false;
     return true;
 }
@@ -59,8 +62,8 @@ const bool InputTokenizer::isDigit(char op) {
     return op >= '0' && op <= '9';
 }
 
-const bool InputTokenizer::isLetter(char op) {
-    return op >= 'A' && op <= 'Z' || op >= 'a' && op <= 'z';
+const bool InputTokenizer::isInitial(char op) {
+    return op >= 'A' && op <= 'Z' || op >= 'a' && op <= 'z' || op == '_';
 }
 
 const bool InputTokenizer::isOperator(char op) {

@@ -7,7 +7,8 @@
 enum class TokenType {
     Number,
     Operator,
-    Identifier,
+    Variant,
+    Function,
     Comma,
     Fullstop
 };
