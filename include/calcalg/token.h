@@ -7,8 +7,11 @@
 enum class TokenType {
     Number,
     Operator,
+    LeftParen,
+    RightParen,
     Variant,
     Function,
+    Constant,
     Comma,
     Fullstop
 };

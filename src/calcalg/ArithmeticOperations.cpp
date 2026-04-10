@@ -37,6 +37,9 @@ const mpf_class ArithmeticOperations::multiply(const mpf_class &x, const mpf_cla
 }
 
 const mpf_class ArithmeticOperations::divide(const mpf_class &x, const mpf_class &y) {
+    if (y == 0) {
+        throw std::runtime_error("divide by zero");
+    }
     return x / y;
 }
 

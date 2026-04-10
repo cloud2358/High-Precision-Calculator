@@ -9,13 +9,15 @@
 
 class InputTokenizer {
 public:
-    static const std::vector<Token> tokenize(const std::string &input);
+    static const std::vector<Token> split(const std::string &input);
+    static const bool check(const std::vector<Token>& tokens);
 private:
-    static const Token getNextToken(const std::string &input, size_t &position);
-    static const bool isNotBlank(char op);
-    static const bool isDigit(char op);
-    static const bool isInitial(char op);
-    static const bool isOperator(char op);
+    static const Token getNextToken(const std::string &input, size_t &position, bool isSignValid);
+    static const bool isDigit(char ch);
+    static const bool isInitial(char ch);
+    static const bool isOperator(char ch);
+    static const bool isLeftParen(char ch);
+    static const bool isRightParen(char ch);
 };
 
 #endif

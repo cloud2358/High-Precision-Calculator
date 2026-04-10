@@ -1,34 +1,48 @@
 #include <MathUtils.h>
 
-const std::unordered_map<std::string, MathUtils::MathFunc> MathUtils::registry = {
+const std::unordered_map<std::string, MathUtils::MathConst> MathUtils::ConstReg = {
     {"pi", getConstantPi},
-    {"e", getConstantE},
+    {"e", getConstantE}
+};
+
+const std::unordered_map<std::string, MathUtils::MathFunc> MathUtils::FuncReg = {
     {"sin", getSin},
     {"cos", getCos}
 };
-
+const bool MathUtils::isMathConst(const std::string& name) {
+    return ConstReg.find(name) != ConstReg.end();
+}
 const bool MathUtils::isMathFunc(const std::string& name) {
-    return registry.find(name) != registry.end();
+    return FuncReg.find(name) != FuncReg.end();
 }
 
-const mpf_class MathUtils::getMathFunc(const std::string& name, const std::vector<mpf_class>& arguments) {
-    auto it = registry.find(name);
-    if (it != registry.end()) {
-        return it->second(arguments, DEFAULT_PRECISION);
+const mpf_class MathUtils::getMathConst(const std::string& name) {
+    auto it =ConstReg.find(name);
+    if (it != ConstReg.end()) {
+        return it->second(DEFAULT_PRECISION);
     }
     return 0;
 }
 
+const mpf_class MathUtils::getMathFunc(const std::string& name, const std::vector<mpf_class>& arguments) {
+    auto it = FuncReg.find(name);
+    if (it != FuncReg.end()) {
+        return it->second(arguments, DEFAULT_PRECISION);
+    }
+    throw std::runtime_error("Function not found");
+    return 0;
+}
+
 // precision = 10 base precise digits count
-const mpf_class MathUtils::getConstantPi(const std::vector<mpf_class>& arguments, size_t precision) {
+const mpf_class MathUtils::getConstantPi(size_t precision) {
     const mpz_class A = 13591409;
     const mpz_class D = 426880;
     const mpz_class E = 10005;
 
-    unsigned int N = precision / 14 + 1;
+    unsigned int iter_num = precision / 14 + 1;
     unsigned int prec_bits = precision * 3.321928 + 64;
     mpf_set_default_prec(prec_bits);
-    PQT res = Chudnovsky(0, N);
+    PQT res = Chudnovsky(0, iter_num);
     mpf_class pi;
     mpf_class q_f(res.Q);
     mpf_class t_f(res.T);
@@ -37,7 +51,7 @@ const mpf_class MathUtils::getConstantPi(const std::vector<mpf_class>& arguments
     return pi;
 }
 
-const mpf_class MathUtils::getConstantE(const std::vector<mpf_class>& arguments, size_t precision) {
+const mpf_class MathUtils::getConstantE(size_t precision) {
     unsigned int N = precision;
     unsigned int prec_bits = precision * 3.321928 + 64;
     mpf_set_default_prec(prec_bits);
@@ -51,15 +65,45 @@ const mpf_class MathUtils::getConstantE(const std::vector<mpf_class>& arguments,
 }
 
 const mpf_class MathUtils::getSin(const std::vector<mpf_class> &arguments, size_t precision) {
-    if (arguments.size() != 1) throw std::runtime_error("Argument num error");
+    if (arguments.size() != 1) throw std::runtime_error("Function 'sin' should have 1 argument");
     mpf_class x = arguments[0];
-    return x - x * x * x / 6 + x * x * x * x * x / 120 - x * x * x * x * x * x * x / 5040;
+    unsigned int iter_num = precision;
+    unsigned int prec_bits = precision * 3.321928 + 64;
+    mpf_set_default_prec(prec_bits);
+    mpf_class sin_x = 0;
+    mpf_class term = x;
+    mpf_class x2 = x * x;
+    mpf_class epsilon = mpf_class(1);
+    for (size_t i = 0; i <= precision; ++i) epsilon /= 10;
+    for (size_t k = 0; k < iter_num; ++k) {
+        sin_x += term;
+        mpf_class denom(static_cast<unsigned long>(2 * k + 2));
+        denom *= static_cast<unsigned long>(2 * k + 3);
+        term *= -x2 / denom;
+        if (abs(term) < epsilon) break;
+    }
+    return sin_x;
 }
 
 const mpf_class MathUtils::getCos(const std::vector<mpf_class> &arguments, size_t precision) {
-    if (arguments.size() != -1) throw std::runtime_error("Argument num error");
+    if (arguments.size() != 1) throw std::runtime_error("Argument num error");
     mpf_class x = arguments[0];
-    return 1 - x * x / 2 + x * x * x * x / 24 - x * x * x * x * x * x / 720;
+    unsigned int iter_num = precision;
+    unsigned int prec_bits = precision * 3.321928 + 64;
+    mpf_set_default_prec(prec_bits);
+    mpf_class cos_x = 0;
+    mpf_class term = 1;
+    mpf_class x2 = x * x;
+    mpf_class epsilon = mpf_class(1);
+    for (size_t i = 0; i <= precision; ++i) epsilon /= 10;
+    for (size_t k = 0; k < iter_num; ++k) {
+        cos_x += term;
+        mpf_class denom(static_cast<unsigned long>(2 * k + 2));
+        denom *= static_cast<unsigned long>(2 * k + 1);
+        term *= -x2 / denom;
+        if (abs(term) < epsilon) break;
+    }
+    return cos_x;
 }
 
 MathUtils::PQT MathUtils::Chudnovsky(mpz_class n1, mpz_class n2) {

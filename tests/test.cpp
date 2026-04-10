@@ -1,17 +1,19 @@
 #include <HighPrecisionCalculator.h>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <conio.h>
 using namespace std;
 #define DIVLINE "===================="
 int main() {
     cout << DIVLINE << endl;
-    cout << "This is high precision calculator version 0.162!" << endl;
+    cout << "This is high precision calculator version 0.168!" << endl;
     cout << "Enter 'help' to get more information." << endl;
     vector<string> hist;
     while (true) {
         cout << "> ";
         string s;
-        std::getline(cin, s);
+        getline(cin, s);
         if (s == "quit") {
             cout << "bye" << endl;
             break;
@@ -19,8 +21,19 @@ int main() {
         else if (s == "help") {
             cout << "help               get command illustration" << endl;
             cout << "history            check history formulas" << endl;
+            cout << "token              get tokenize expression" << endl;
             cout << "clear              clean screen" << endl;
             cout << "quit               end process" << endl;
+        }
+        else if (s == "token") {
+            string t;
+            cout << "Enter expression: ";
+            getline(cin, t);
+            vector<Token> res = InputTokenizer::split(t);
+            for (auto e : res) {
+                cout << "\"" << e.name << "\"" << " ";
+            }
+            cout << endl;
         }
         else if (s == "history") {
             if (hist.empty()) {
@@ -35,23 +48,30 @@ int main() {
             cout << "\x1B[2J\x1B[H";
         }
         else {
-            auto res = HighPrecisionCalculator::calculate(s);
-            
-            mp_exp_t exp;
-            string a = res.get_str(exp, 10, 8);
-            
-            std::string result;
-            if (exp <= 0) {
-                result = "0." + std::string(-exp, '0') + a;
+            try {
+                mpf_class res = HighPrecisionCalculator::calculate(s);
+                stringstream ss;
+                ss << fixed << setprecision(DEFAULT_PRECISION) << res;
+                string ress = ss.str();
+                while (ress.size()) {
+                    if (ress.back() == '0') {
+                        ress.pop_back();
+                    }
+                    else if (ress.back() == '.') { 
+                        ress.pop_back();
+                        break;
+                    }
+                    else break;
+                }
+                hist.push_back(s + " = " + ress);
+                cout << ress << endl;
             }
-            else if ((size_t)exp >= a.size()) {
-                result = a + std::string(exp - a.size(), '0');
+            catch(const mpf_class& x) {
+                cout << "Throw value: " << x << endl;
             }
-            else {
-                result = a.substr(0, exp) + "." + a.substr(exp);
+            catch(const runtime_error& e) {
+                cout << "Error: " << e.what() << endl;
             }
-            hist.push_back(s + " = " + result);
-            cout << result << endl;
         }
     }
     cout << DIVLINE << endl;
