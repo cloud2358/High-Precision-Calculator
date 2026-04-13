@@ -1,17 +1,21 @@
 #include <MathUtils.h>
 
 const std::unordered_map<std::string, MathUtils::MathConst> MathUtils::ConstReg = {
-    {"pi", getConstantPi},
-    {"e", getConstantE}
+    {"pi", get_const_pi},
+    {"e", get_const_e}
 };
 
 const std::unordered_map<std::string, MathUtils::MathFunc> MathUtils::FuncReg = {
-    {"sin", getSin},
-    {"cos", getCos}
+    {"sin", get_sin},
+    {"cos", get_cos},
+    {"fact", get_fact},
+    {"powi", get_powi}
 };
+
 const bool MathUtils::isMathConst(const std::string& name) {
     return ConstReg.find(name) != ConstReg.end();
 }
+
 const bool MathUtils::isMathFunc(const std::string& name) {
     return FuncReg.find(name) != FuncReg.end();
 }
@@ -34,7 +38,7 @@ const mpf_class MathUtils::getMathFunc(const std::string& name, const std::vecto
 }
 
 // precision = 10 base precise digits count
-const mpf_class MathUtils::getConstantPi(size_t precision) {
+const mpf_class MathUtils::get_const_pi(size_t precision) {
     const mpz_class A = 13591409;
     const mpz_class D = 426880;
     const mpz_class E = 10005;
@@ -51,7 +55,7 @@ const mpf_class MathUtils::getConstantPi(size_t precision) {
     return pi;
 }
 
-const mpf_class MathUtils::getConstantE(size_t precision) {
+const mpf_class MathUtils::get_const_e(size_t precision) {
     unsigned int N = precision;
     unsigned int prec_bits = precision * 3.321928 + 64;
     mpf_set_default_prec(prec_bits);
@@ -64,8 +68,8 @@ const mpf_class MathUtils::getConstantE(size_t precision) {
     return e;
 }
 
-const mpf_class MathUtils::getSin(const std::vector<mpf_class> &arguments, size_t precision) {
-    if (arguments.size() != 1) throw std::runtime_error("Function 'sin' should have 1 argument");
+const mpf_class MathUtils::get_sin(const std::vector<mpf_class> &arguments, size_t precision) {
+    if (arguments.size() != 1) throw std::runtime_error("Function 'sin' expected 1 argument");
     mpf_class x = arguments[0];
     unsigned int iter_num = precision;
     unsigned int prec_bits = precision * 3.321928 + 64;
@@ -85,8 +89,8 @@ const mpf_class MathUtils::getSin(const std::vector<mpf_class> &arguments, size_
     return sin_x;
 }
 
-const mpf_class MathUtils::getCos(const std::vector<mpf_class> &arguments, size_t precision) {
-    if (arguments.size() != 1) throw std::runtime_error("Argument num error");
+const mpf_class MathUtils::get_cos(const std::vector<mpf_class> &arguments, size_t precision) {
+    if (arguments.size() != 1) throw std::runtime_error("Function 'cos' expected 1 argument");
     mpf_class x = arguments[0];
     unsigned int iter_num = precision;
     unsigned int prec_bits = precision * 3.321928 + 64;
@@ -104,6 +108,57 @@ const mpf_class MathUtils::getCos(const std::vector<mpf_class> &arguments, size_
         if (abs(term) < epsilon) break;
     }
     return cos_x;
+}
+
+const mpf_class MathUtils::get_fact(const std::vector<mpf_class> &arguments, size_t precision) {
+    if (arguments.size() != 1) throw std::runtime_error("Function 'fact' expected 1 argument");
+    if (!isInteger(arguments[0])) throw std::runtime_error("Function 'fact' expected integer; use 'gamma' instead");
+    mpz_class x = (mpz_class)arguments[0];
+    mpz_class res = 1;
+    for (mpz_class i = 2; i < x; i++) {
+        res = res * i;
+    }
+    return res;
+}
+
+const mpf_class MathUtils::get_exp(const std::vector<mpf_class> &arguments, size_t precision) {
+    if (arguments.size() != 1) throw std::runtime_error("Function 'exp' expected 1 argument");
+    mpf_class x = arguments[0];
+    unsigned int iter_num = precision;
+    unsigned int prec_bits = precision * 3.321928 + 64;
+    mpf_set_default_prec(prec_bits);
+    return 0;
+}
+
+const mpf_class MathUtils::get_pow(const std::vector<mpf_class>& arguments, size_t precision) {
+    if (arguments.size() != 2) throw std::runtime_error("Function 'pow' expected 2 arguments");
+    mpf_class a = arguments[0], x = arguments[1], res;
+
+    // res = a^x
+
+    return res;
+}
+
+const mpf_class MathUtils::get_powi(const std::vector<mpf_class>& arguments, size_t precision) {
+    if (arguments.size() != 2) throw std::runtime_error("Function 'powi' expected 2 arguments");
+    if (!isInteger(arguments[1])) throw std::runtime_error("Function 'powi' expected integer exponent; use 'pow' instead");
+    mpf_class a = arguments[0], res = 1;
+    mpz_class x = (mpz_class)arguments[1];
+
+    while (x != 0) {
+        if (x % 2 != 0) {
+            if (x > 0) res *= a;
+            else res /= a;
+        }
+        a *= a;
+        x /= 2;
+    }
+
+    return res;
+}
+
+const bool MathUtils::isInteger(const mpf_class& x) {
+    return mpf_integer_p(x.get_mpf_t()) != 0;
 }
 
 MathUtils::PQT MathUtils::Chudnovsky(mpz_class n1, mpz_class n2) {

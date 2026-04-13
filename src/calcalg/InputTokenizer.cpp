@@ -7,52 +7,91 @@ const std::vector<Token> InputTokenizer::split(const std::string& input) {
     bool isSignValid = true;
     while (position < input.size()) {
         Token token = getNextToken(input, position, isSignValid);
-        if (token.type == TokenType::Fullstop) break;
-        if (token.type == TokenType::LeftParen) isSignValid = true;
+        if (token.type == TokenType::End) break;
+        if (token.type == TokenType::LeftParen || token.type == TokenType::Comma) isSignValid = true;
         else isSignValid = false;
         targetVector.push_back(token);
     }
+    if (!targetVector.empty() && targetVector.back().type == TokenType::Comma) targetVector.pop_back();
     return targetVector;
 }
 
-const bool InputTokenizer::check(const std::vector<Token> &tokens) {
+const bool InputTokenizer::check(const std::vector<Token> &tokens, bool detailed_check) {
     bool isValidOp = false;
     int parenCount = 0;
+    std::vector<size_t> subTokenSize;
+    subTokenSize.push_back(0);
+    
     for (size_t i = 0; i < tokens.size(); ++i) {
         Token token = tokens[i];
         if (token.type == TokenType::Number || token.type == TokenType::Variant || token.type == TokenType::Constant) {
-            if (isValidOp) return false;
+            if (isValidOp) {
+                if (detailed_check) throw std::runtime_error("Expect a value");
+                return false;
+            }
             isValidOp = true;
+            subTokenSize[parenCount]++;
         }
         else if (token.type == TokenType::Function) {
-            if (isValidOp) return false;
-            isValidOp = false; // function must be followed by '('
+            if (isValidOp) {
+                if (detailed_check) throw std::runtime_error("Expect a value");
+                return false;
+            }
+            isValidOp = false;
+            subTokenSize[parenCount]++;
         }
         else if (token.type == TokenType::Operator) {
-            if (!isValidOp) return false;  
+            if (!isValidOp) {
+                if (detailed_check) throw std::runtime_error("Expect a operator");
+                return false;  
+            }
             isValidOp = false;
+            subTokenSize[parenCount]++;
         }
         else if (token.type == TokenType::LeftParen) {   
-            if (isValidOp) return false;
-            parenCount++;
+            if (isValidOp) {
+                if (detailed_check) throw std::runtime_error("Expect a value");
+                return false;
+            }
+            subTokenSize.push_back(0); parenCount++;
             isValidOp = false;
         }
         else if (token.type == TokenType::RightParen) {
-            if (!isValidOp) return false;
+            if (!isValidOp) {
+                if (detailed_check) throw std::runtime_error("Expect a operator");
+                return false;
+            }
             parenCount--;
-            if (parenCount < 0) return false;
+            if (parenCount < 0) {
+                if (detailed_check) throw std::runtime_error("Parenthesis mismatch");
+                return false;
+            }
+            subTokenSize[parenCount] += 1;
+            subTokenSize.pop_back();
             isValidOp = true;
         }
-        else if (token.type == TokenType::Fullstop) {
+        else if (token.type == TokenType::Comma) {
+            if (subTokenSize[parenCount] != 0) {
+                if (tokens[i - 1].type == TokenType::Operator) return false;
+                if (tokens[i - 1].type == TokenType::Function) return false;
+            }
+            subTokenSize[parenCount] = 0;
+            isValidOp = false;
         }
         else {
             return false;
         }
     }
     if (parenCount != 0) return false;
-    if (!tokens.empty()) {
-        if (tokens.back().type == TokenType::Operator) return false;
-        if (tokens.back().type == TokenType::Function) return false;
+    if (subTokenSize[0] != 0) {
+        if (tokens.back().type == TokenType::Operator) {
+            if (detailed_check) throw std::runtime_error("Should end with a value");
+            return false;
+        }
+        if (tokens.back().type == TokenType::Function) {
+            if (detailed_check) throw std::runtime_error("Should end with a value");
+            return false;
+        }
     }
     return true;
 }
@@ -67,7 +106,7 @@ const Token InputTokenizer::getNextToken(const std::string &input, size_t &posit
     while (position < inputSize && input[position] == ' ') position++;
 
     if (position >= inputSize) {
-        token.type = TokenType::Fullstop;
+        token.type = TokenType::End;
     }
     else if (isDigit(input[position]) || isSignValid && (input[position] == '+' || input[position] == '-')) {
         token.type = TokenType::Number;

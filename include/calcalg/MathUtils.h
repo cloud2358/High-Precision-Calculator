@@ -16,16 +16,23 @@ public:
     static const bool isMathFunc(const std::string& name);
     static const mpf_class getMathConst(const std::string &name);
     static const mpf_class getMathFunc(const std::string &name, const std::vector<mpf_class> &arguments);
-
 private:
     using MathConst = std::function<mpf_class(size_t)>;
     using MathFunc = std::function<mpf_class(std::vector<mpf_class>, size_t)>;
     static const std::unordered_map<std::string, MathConst> ConstReg;
     static const std::unordered_map<std::string, MathFunc> FuncReg;
-    static const mpf_class getConstantPi(size_t precision);
-    static const mpf_class getConstantE(size_t precision);
-    static const mpf_class getSin(const std::vector<mpf_class> &arguments, size_t precision);
-    static const mpf_class getCos(const std::vector<mpf_class> &arguments, size_t precision);
+    static const mpf_class get_const_pi(size_t precision);
+    static const mpf_class get_const_e(size_t precision);
+
+    static const mpf_class get_sin(const std::vector<mpf_class> &arguments, size_t precision);
+    static const mpf_class get_cos(const std::vector<mpf_class> &arguments, size_t precision);
+    static const mpf_class get_fact(const std::vector<mpf_class> &arguments, size_t precision);
+    static const mpf_class get_exp(const std::vector<mpf_class> &arguments, size_t precision);
+    static const mpf_class get_pow(const std::vector<mpf_class> &arguments, size_t precision);
+    static const mpf_class get_powi(const std::vector<mpf_class> &arguments, size_t precision);
+
+    static const bool isInteger(const mpf_class& x); 
+
     struct PQT { mpz_class P, Q, T; };
     static PQT Chudnovsky(mpz_class n1, mpz_class n2);
     static PQT Taylor(mpz_class n1, mpz_class n2);

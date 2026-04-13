@@ -14,9 +14,10 @@
 
 class HighPrecisionCalculator {
 public:
-    static const mpf_class calculate(const std::string& input);
+    static const std::vector<mpf_class> calculate(const std::string& input);
 private:
-    static const mpf_class evaluateTokensStack(const std::vector<Token> &tokens, size_t l, size_t r);
+    static const std::vector<mpf_class> getAllResults(const std::vector<Token>& tokens, size_t l, size_t r);
+    static const mpf_class getResult(const std::vector<Token> &tokens, size_t l, size_t r);
 };
 
 #endif

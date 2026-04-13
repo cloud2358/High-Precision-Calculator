@@ -13,7 +13,7 @@ enum class TokenType {
     Function,
     Constant,
     Comma,
-    Fullstop
+    End
 };
 
 struct Token {

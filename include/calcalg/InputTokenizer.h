@@ -10,7 +10,7 @@
 class InputTokenizer {
 public:
     static const std::vector<Token> split(const std::string &input);
-    static const bool check(const std::vector<Token>& tokens);
+    static const bool check(const std::vector<Token>& tokens, bool detailed_check = false);
 private:
     static const Token getNextToken(const std::string &input, size_t &position, bool isSignValid);
     static const bool isDigit(char ch);
